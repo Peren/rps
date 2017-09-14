@@ -1,0 +1,139 @@
+body {
+	color: white;
+    background-color: lightblue;
+    margin: 0px;
+    padding: 0px;
+}
+
+h1, h2 {
+    text-align: center;
+}
+
+.hidden {
+	display: none;
+}
+
+.game {
+	border: solid white;
+	border-radius: 20px;
+	margin: 10px 10px 20px;
+	position: relative;
+	min-height: 120px;
+}
+
+.game .challenge {
+	pos ition: absolute;
+	wi dth: 100%;
+	text-align:center;
+	font-size: 150%;
+}
+
+.game .vs {
+	position: relative;
+	pos ition: absolute;
+	le ft: 50%;
+	to p: 70px;
+	wi dth: 100%;
+}
+
+.game .vs .text {
+	color: lightcyan;
+	text-align:center;
+	font-size: 300%;
+
+	width: 100%;
+	line-height: 80px;
+	mar gin: -50px;
+}
+
+.game .vs .attacker {
+	position: absolute;
+	width: 200px;
+	margin: 10px 40px;
+
+	bottom: 50%;
+	right: 50%;
+	text-align: right;
+}
+
+.game .vs .defender {
+	position: absolute;
+	width: 200px;
+	margin: 10px 40px;
+
+	top: 50%;
+	left: 50%;
+	text-align: left;
+}
+
+.game .attacker_points, .defender_points {
+	position: absolute;
+	top: 50%;
+	width: 100px;
+	line-height: 100px;
+	margin: -50px 0px;
+	text-align: center;
+	font-size: 300%;
+}
+
+.game .attacker_points {
+	left: 0%;
+}
+
+.game .defender_points {
+	right: 0%;
+}
+
+.game .attack, .game .defence {
+	display: none;
+}
+
+.game .plays {
+	mar gin: 120px 0px 30px 0px;
+	color: lightcyan;
+	text-align: center;
+	margin: 0px 0px 30px 0px;
+}
+
+.game .winner {
+	display: none;
+}
+
+.game .date {
+	display: none;
+}
+
+.game .button {
+	color: white;
+    background-color: lightblue;
+
+	border: solid white;
+	border-radius: 100px;
+
+	position: absolute;
+	bottom: 0px;
+	width: 90px;
+	line-height: 30px;
+	margin: -15px -45px;
+	text-align: center;
+}
+
+.game .button:hover {
+	color: lightblue;
+    background-color: white;
+}
+
+.game .button.selected {
+	color: lightblue;
+    background-color: white;
+}
+
+.game .button.rock {
+	left: 25%;
+}
+.game .button.paper {
+	left: 50%;
+}
+.game .button.scissors {
+	right: 25%;
+}

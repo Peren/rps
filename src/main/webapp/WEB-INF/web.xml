@@ -7,10 +7,54 @@
     <servlet-name>HelloAppEngine</servlet-name>
     <servlet-class>se.per.rps.HelloAppEngine</servlet-class>
   </servlet>
+
+  <servlet>
+    <servlet-name>Login</servlet-name>
+    <servlet-class>se.per.rps.Login</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>Logout</servlet-name>
+    <servlet-class>se.per.rps.Logout</servlet-class>
+  </servlet>
+
+  <servlet>
+    <servlet-name>RpsServlet</servlet-name>
+    <servlet-class>se.per.rps.challenge.GameServlet</servlet-class>
+  </servlet>
+
   <servlet-mapping>
     <servlet-name>HelloAppEngine</servlet-name>
     <url-pattern>/hello</url-pattern>
   </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>Login</servlet-name>
+    <url-pattern>/login</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>Logout</servlet-name>
+    <url-pattern>/logout</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>RpsServlet</servlet-name>
+    <url-pattern>/rps</url-pattern>
+    <url-pattern>/rps/*</url-pattern>
+  </servlet-mapping>
+
+  <filter>
+    <filter-name>ObjectifyFilter</filter-name>
+    <filter-class>com.googlecode.objectify.ObjectifyFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>ObjectifyFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  <listener>
+    <listener-class>se.per.rps.OfyHelper</listener-class>
+  </listener>
+
   <welcome-file-list>
     <welcome-file>index.html</welcome-file>
   </welcome-file-list>

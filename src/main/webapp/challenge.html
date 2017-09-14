@@ -1,0 +1,364 @@
+<html>
+<head>
+<title>Rock-Paper-Scissors</title>
+<link rel="stylesheet" type="text/css" href="challenge.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!-- script src="jquery.min.js"></script-->
+<script type="text/javascript">
+
+function buildDiv(cssClass, content, name) {
+	var div = $("<div></div>");
+
+	if (cssClass) {
+		div.addClass(cssClass);
+	}
+
+	if (content) {
+		div.append(content);
+	}
+
+	if (name) {
+		div.attr("name", name);
+	}
+
+	return div;
+}
+
+function buildGame(game) {
+	console.log(game);
+	console.log(game.attacker);
+
+	var div = buildDiv("game");
+	div.attr("id", "game_"+ game.id);
+
+	div.append(buildDiv("id hidden", "Id:"+ game.id));
+	div.append(buildDiv("challenge", "&ldquo;"+ game.challenge +"&rdquo;"));
+
+	var vs = buildDiv("vs");
+	div.append(vs);
+	vs.append(buildDiv("text", "VS"));
+	vs.append(buildDiv("attacker", ""+ game.attacker.mail));
+	vs.append(buildDiv("defender", ""+ game.defender.mail));
+
+//	div.append(buildDiv("attack", "Attack: "+ game.attack));
+//	div.append(buildDiv("defence", "Defence: "+ game.defence));
+	vs.append(buildDiv("attacker_points", ""+ game.attacker.points));
+	vs.append(buildDiv("defender_points", ""+ game.defender.points));
+
+	var plays = buildDiv("plays");
+	for (var play of game.plays) {
+		plays.append(buildDiv(null, play));
+	}
+
+	div.append(plays);
+	div.append(buildDiv("winner", "Winner: "+ game.winner));
+	div.append(buildDiv("date", "Date: "+ game.date));
+
+	div.append(buildDiv("button rock", "Rock", "rock"));
+	div.append(buildDiv("button paper", "Paper", "paper"));
+	div.append(buildDiv("button scissors", "Scissors", "scissors"));
+
+	div.data("game", game);
+	return div;
+}
+
+function equalsNoCase(s1, s2) {
+	if (s1 == s2) return true;
+
+	if (s1 == null) return false;
+	if (s2 == null) return false;
+	return s1.toUpperCase() == s2.toUpperCase();
+}
+
+function updateGame(game) {
+	var div = $("#game_"+ game.id);
+	if (!div.length) {
+		div = buildGame(game);
+//		console.log("Built:")
+	} else {
+//		console.log("Existing:")
+	}
+//	console.log(div.get())
+
+//	div.find(".attack").html("Attack: "+ game.attack);
+//	div.find(".defence").html("Defence: "+ game.defence);
+
+	div.find(".attacker_points").html(game.attacker.points);
+	div.find(".defender_points").html(game.defender.points);
+
+	var buttons = div.find(".button");
+//	console.log(buttons);
+//	console.log(buttons.length);
+	for (var i = 0; i < buttons.length; ++i) {
+		var button = buttons[i];
+//	for (var button of buttons) {
+		var b = $(button);
+		var action = b.attr("name");
+//		console.log("Action: '"+ game.attack +"' '"+ game.defence +"' '"+ action +"'");
+		if (equalsNoCase(game.attacker.action, action) ||
+			equalsNoCase(game.defender.action, action)) {
+			b.addClass("selected");
+		} else {
+			b.removeClass("selected");
+		}
+//		console.log(button);
+	}
+
+	return div;
+}
+
+$(document).ready(function() {
+//	gvar game = JSON.parse("{\"id\":1, \"challenge\":\"An garde!\", \"attacker\":\"foo\", \"attack\":\"rock\", \"defender\":\"bar\", \"defence\":\"paper\", \"winner\":\"test\", \"date\":\"1234-45-67\"}");
+//	buildGame(game).appendTo("#games");
+
+	$("#games").on("click", ".game", function() {
+//		console.log(this);
+		var game = $(this).data("game");
+//		console.log(game);
+
+		$("#id").val(game.id);
+		$("#challenge").val(game.challenge);
+		$("#attacker").val(game.attacker.mail);
+		$("#defender").val(game.defender.mail);
+	});
+
+	$("#games").on("click", ".game .button", function() {
+		var div = $(this).parent();
+		var game = div.data("game");
+//		console.log(game);
+
+		if ($(this).hasClass("rock")) {
+			doAction(game.id, "rock", "R");
+		}
+		if ($(this).hasClass("paper")) {
+			doAction(game.id, "paper", "P");
+		}
+		if ($(this).hasClass("scissors")) {
+			doAction(game.id, "scissors", "S");
+		}
+	});
+
+	$("#read").click(function() {
+		var id = $("#id").val();
+
+		console.log("R ("+ id +")");
+
+		var data = {};
+		if (id) data = {
+			id: id
+		};
+
+		$.ajax({
+			method: "GET",
+			dataType: "json",
+			url: "/rps",
+			data: data
+		})
+		.done(function(json, status) {
+//			console.log(json);
+
+			var games = json.games;
+			if (games) {
+//				console.log("Games: "+ json.games.length);
+				$.each(games, function(index) {
+					var game = games[index];
+					$("#games").append(updateGame(game));
+				});
+			}
+
+			var game = json.game;
+			if (game) {
+//				console.log("Game");
+				$("#id").val(game.id);
+				$("#attacker").val(game.attacker.mail);
+//				$("#attack").val(game.attack);
+				$("#defender").val(game.defender.mail);
+//				$("#defence").val(game.defence);
+				$("#winner").val(game.winner);
+				$("#date").val(game.date);
+
+				$("#games").append(updateGame(game));
+			}
+		})
+		.fail(function(x, status, error) {
+			console.log(status);
+			console.log(error);
+		});
+	});
+
+	$("#create").click(function() {
+		var challenge = $("#challenge").val();
+		if (!challenge) return;
+
+		var defender = $("#defender").val();
+		if (!defender) return;
+
+		console.log("C");
+
+		$.ajax({
+			method: "POST",
+			dataType: "json",
+			url: "/rps",
+			data: {
+				challenge: challenge,
+				defender: defender
+			}
+		})
+		.done(function(json, status) {
+			$("#read").click();
+		})
+		.fail(function(x, status, error) {
+			console.log(status);
+			console.log(error);
+		});
+	});
+/*
+	$("#update").click(function() {
+		var id = $("#id").val();
+		if (!id) return;
+
+		var attacker = $("#attacker").val();
+		if (!attacker) return;
+
+		var defender = $("#defender").val();
+		if (!defender) return;
+
+		console.log("U");
+
+		$.ajax({
+			method: "PUT",
+			dataType: "json",
+			url: "/rps/"+ id,
+			data: {
+				attacker: attacker,
+				defender: defender
+			}
+		})
+		.done(function(json, status) {
+		})
+		.fail(function(x, status, error) {
+			console.log(status);
+			console.log(error);
+		});
+	});
+*/
+	$("#delete").click(function() {
+		var id = $("#id").val();
+		if (!id) return;
+
+		console.log("D ("+ id +")");
+
+		$.ajax({
+			method: "DELETE",
+			dataType: "json",
+			url: "/rps",
+			data: {
+				id: id
+			}
+		})
+		.done(function(json, status) {
+		})
+		.fail(function(x, status, error) {
+			console.log(status);
+			console.log(error);
+		});
+	});
+
+	function doAction(id, action, log) {
+//		console.log(log);
+
+		$.ajax({
+			method: "PUT",
+			dataType: "json",
+			url: "/rps",
+			data: {
+				id: id,
+				action: action
+			}
+		})
+		.done(function(json) {
+			$("#read").click();
+		});
+	}
+
+	$("#rock").click(function() {
+		var id = $("#id").val();
+		if (!id) return;
+
+		doAction(id, "rock", "R");
+	});
+	$("#paper").click(function() {
+		var id = $("#id").val();
+		if (!id) return;
+
+		doAction(id, "paper", "P");
+	});
+	$("#scissors").click(function() {
+		var id = $("#id").val();
+		if (!id) return;
+
+		doAction(id, "scissors", "S");
+	});
+
+	$("#send").click(function() {
+		var challenge = $("#challenge").val();
+		if (!challenge) return;
+
+		var defender = $("#defender").val();
+		if (!defender) return;
+
+		$.ajax({
+			method: "POST",
+			dataType: "json",
+			url: "/rps",
+			data: {
+				challenge: challenge,
+				defender: defender
+			}
+		})
+		.done(function(json) {
+			var game = json.game;
+			$("#id").val(game.id);
+
+			$("#read").click();
+		});
+	});
+
+	$("#read").click();
+});
+
+</script>
+</head>
+<body>
+<h1>Rock Paper Scissors</h1>
+
+<div class="game">
+<h2>Challenge a friend!</h2>
+<!-- form action="/rps" method="post"-->
+<div style="text-align:center"><input id="challenge" placeholder="Challenge" value="En garde!"></input>
+<input id="defender" placeholder="Defender"></input></div>
+<div style="text-align:center"><button id="send">Submit</button></div>
+<!-- /form-->
+</div>
+
+<div id="games"></div>
+
+<table style="display:none">
+<tr>
+<td>
+<input id="id" placeholder="Id"></input>
+<input id="attacker" placeholder="Attacker"></input>
+<button id="read">Read</button>
+<button id="create">Create</button>
+<button id="update">Update</button>
+<button id="delete">Delete</button>
+
+<tr>
+<td>
+<button id="rock">Rock</button>
+<button id="paper">Paper</button>
+<button id="scissors">Scissors</button>
+</table>
+
+</body>
+</html>
