@@ -79,10 +79,14 @@ public class GameManager {
 	}
 
 	public Game createGame(String challenge, String defender, CurrentUser user) {
+		// TODO: make a check that defender is a valid mail address
+
 		Game game = new Game(user.user.getEmail(), defender);
 		game.challenge = challenge;
 
 		logger.info(game.toString());
+
+		// TODO: send email to the defender
 
 		gp.setGame(game);
 		// TODO: return id instead
@@ -124,6 +128,8 @@ public class GameManager {
 			game.attacker.action = null;
 			game.defender.action = null;
 		}
+
+		// TODO: check for victory condition and declare a winner after x rounds
 
 		logger.info(game.toString());
 

@@ -40,8 +40,6 @@ function buildGame(game) {
 	vs.append(buildDiv("attacker", ""+ game.attacker.mail));
 	vs.append(buildDiv("defender", ""+ game.defender.mail));
 
-//	div.append(buildDiv("attack", "Attack: "+ game.attack));
-//	div.append(buildDiv("defence", "Defence: "+ game.defence));
 	vs.append(buildDiv("attacker_points", ""+ game.attacker.points));
 	vs.append(buildDiv("defender_points", ""+ game.defender.points));
 
@@ -74,58 +72,61 @@ function updateGame(game) {
 	var div = $("#game_"+ game.id);
 	if (!div.length) {
 		div = buildGame(game);
-//		console.log("Built:")
-	} else {
-//		console.log("Existing:")
 	}
-//	console.log(div.get())
-
-//	div.find(".attack").html("Attack: "+ game.attack);
-//	div.find(".defence").html("Defence: "+ game.defence);
 
 	div.find(".attacker_points").html(game.attacker.points);
 	div.find(".defender_points").html(game.defender.points);
 
 	var buttons = div.find(".button");
-//	console.log(buttons);
-//	console.log(buttons.length);
 	for (var i = 0; i < buttons.length; ++i) {
 		var button = buttons[i];
-//	for (var button of buttons) {
 		var b = $(button);
 		var action = b.attr("name");
-//		console.log("Action: '"+ game.attack +"' '"+ game.defence +"' '"+ action +"'");
 		if (equalsNoCase(game.attacker.action, action) ||
 			equalsNoCase(game.defender.action, action)) {
 			b.addClass("selected");
 		} else {
 			b.removeClass("selected");
 		}
-//		console.log(button);
 	}
 
 	return div;
 }
 
 $(document).ready(function() {
-//	gvar game = JSON.parse("{\"id\":1, \"challenge\":\"An garde!\", \"attacker\":\"foo\", \"attack\":\"rock\", \"defender\":\"bar\", \"defence\":\"paper\", \"winner\":\"test\", \"date\":\"1234-45-67\"}");
-//	buildGame(game).appendTo("#games");
+	$.ajax({
+		method: "GET",
+		dataType: "json",
+		url: "/user"
+	})
+	.done(function(json, status) {
+//		console.log(json);
+
+		$("#user").html(json.mail);
+	})
+	.fail(function(x, status, error) {
+//		console.log(status);
+//		console.log(error);
+
+		$("#user").html("Not logged in");
+
+		if (error == "Unauthorized") {
+			
+		}
+	});
 
 	$("#games").on("click", ".game", function() {
-//		console.log(this);
 		var game = $(this).data("game");
-//		console.log(game);
 
 		$("#id").val(game.id);
-		$("#challenge").val(game.challenge);
-		$("#attacker").val(game.attacker.mail);
-		$("#defender").val(game.defender.mail);
+//		$("#challenge").val(game.challenge);
+//		$("#attacker").val(game.attacker.mail);
+//		$("#defender").val(game.defender.mail);
 	});
 
 	$("#games").on("click", ".game .button", function() {
 		var div = $(this).parent();
 		var game = div.data("game");
-//		console.log(game);
 
 		if ($(this).hasClass("rock")) {
 			doAction(game.id, "rock", "R");
@@ -155,11 +156,8 @@ $(document).ready(function() {
 			data: data
 		})
 		.done(function(json, status) {
-//			console.log(json);
-
 			var games = json.games;
 			if (games) {
-//				console.log("Games: "+ json.games.length);
 				$.each(games, function(index) {
 					var game = games[index];
 					$("#games").append(updateGame(game));
@@ -168,12 +166,9 @@ $(document).ready(function() {
 
 			var game = json.game;
 			if (game) {
-//				console.log("Game");
 				$("#id").val(game.id);
 				$("#attacker").val(game.attacker.mail);
-//				$("#attack").val(game.attack);
 				$("#defender").val(game.defender.mail);
-//				$("#defence").val(game.defence);
 				$("#winner").val(game.winner);
 				$("#date").val(game.date);
 
@@ -265,8 +260,6 @@ $(document).ready(function() {
 	});
 
 	function doAction(id, action, log) {
-//		console.log(log);
-
 		$.ajax({
 			method: "PUT",
 			dataType: "json",
@@ -342,6 +335,8 @@ $(document).ready(function() {
 </div>
 
 <div id="games"></div>
+
+<div id="user"></div>
 
 <table style="display:none">
 <tr>

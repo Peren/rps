@@ -137,3 +137,9 @@ h1, h2 {
 .game .button.scissors {
 	right: 25%;
 }
+
+#user {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+}
