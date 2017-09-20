@@ -73,8 +73,11 @@ public class GameManager {
 		gp.delGame(id);
 	}
 
-	public Game createGame(String challenge, String defender, CurrentUser user) {
+	public Game createGame(String challenge, String defender, CurrentUser user) throws GameException {
 		// TODO: make a check that defender is a valid mail address
+		if (defender.equalsIgnoreCase(user.getEmail())) {
+			throw new GameException();
+		}
 
 		Game game = new Game(user.getEmail(), defender);
 		game.challenge = challenge;

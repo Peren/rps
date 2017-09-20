@@ -32,7 +32,7 @@ public class GameManagerTest {
 	}
 
 	@Test
-	public void testCreateGame() {
+	public void testCreateGame() throws GameException {
 		GameManager gm = new GameManager();
 		gm.gp = new GamePersistence() {
 			public Key<Game> setGame(Game game) {

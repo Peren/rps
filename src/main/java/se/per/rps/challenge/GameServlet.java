@@ -76,7 +76,12 @@ public class GameServlet extends HttpServlet {
 			String challenge = req.getParameter("challenge");
 			String defender = req.getParameter("defender");
 
-			Game game = gm.createGame(challenge, defender, user);
+			Game game = null;
+			try {
+				game = gm.createGame(challenge, defender, user);
+			} catch (GameException e) {
+				throw new GameServletException(HttpServletResponse.SC_BAD_REQUEST);
+			}
 
 			StringBuilder sb = new StringBuilder();
 			sb.append("{");
