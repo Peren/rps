@@ -2,9 +2,14 @@ package se.per.rps;
 
 import static org.junit.Assert.*;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import com.google.appengine.api.users.User;
+import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
+import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
+import com.googlecode.objectify.Key;
 
 import se.per.rps.challenge.CurrentUser;
 import se.per.rps.challenge.Game;
@@ -14,19 +19,32 @@ import se.per.rps.challenge.GameManager;
 import se.per.rps.challenge.GamePersistence;
 
 public class GameManagerTest {
+	private final LocalServiceTestHelper helper = new LocalServiceTestHelper(new LocalDatastoreServiceTestConfig());
+
+	@Before
+	public void setUp() {
+		helper.setUp();
+	}
+
+	@After
+	public void tearDown() {
+		helper.tearDown();
+	}
 
 	@Test
 	public void testCreateGame() {
 		GameManager gm = new GameManager();
 		gm.gp = new GamePersistence() {
-			public com.googlecode.objectify.Key<Game> setGame(Game game) {
-				return null;
+			public Key<Game> setGame(Game game) {
+				return Key.create(Game.class, 1);
 			}
 		};
 
 		Game game = gm.createGame("challenge", "defender", new CurrentUser(new User("me@mail.com", ""), false));
 		assertNotNull(game);
-		
+		assertEquals("challenge", game.challenge);
+		assertEquals("defender", game.defender.mail);
+		assertEquals("me@mail.com", game.attacker.mail);
 	}
 
 	@Test

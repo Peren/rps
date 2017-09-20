@@ -26,7 +26,6 @@ function buildDiv(cssClass, content, name) {
 
 function buildGame(game) {
 	console.log(game);
-	console.log(game.attacker);
 
 	var div = buildDiv("game");
 	div.attr("id", "game_"+ game.id);
@@ -200,6 +199,10 @@ $(document).ready(function() {
 			}
 		})
 		.done(function(json, status) {
+			var game = json.game;
+
+			console.log(game);
+			$("#id").val(game.id);
 			$("#read").click();
 		})
 		.fail(function(x, status, error) {

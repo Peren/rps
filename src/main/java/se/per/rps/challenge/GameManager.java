@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import com.googlecode.objectify.Key;
+
 public class GameManager {
 	private static final Logger logger = Logger.getLogger(GameManager.class.getName());
 
@@ -23,7 +25,6 @@ public class GameManager {
 
 		return game;
 	}
-
 
 	public List<Game> listGames(int limit, CurrentUser user) {
 		List<Game> games = null;
@@ -82,10 +83,13 @@ public class GameManager {
 
 		// TODO: send email to the defender
 
-		gp.setGame(game);
-		// TODO: return id instead
-//		Key<Game> key = 
-//		key.getId();
+		Key<Game> key = gp.setGame(game);
+
+		Long id = key.getId();
+		game.id = id;
+		logger.info(game +" "+ id);
+
+		// TODO: return id instead of game
 		return game;
 	}
 
