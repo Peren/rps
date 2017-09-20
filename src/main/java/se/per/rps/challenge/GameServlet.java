@@ -61,7 +61,6 @@ public class GameServlet extends HttpServlet {
 
 			sb.append("}");
 			resp.setContentType("application/json");
-			logger.info(sb.toString());
 			resp.getWriter().write(sb.toString());
 		} catch(GameServletException e) {
 			resp.sendError(e.error);
@@ -138,6 +137,7 @@ public class GameServlet extends HttpServlet {
 
 			String id = req.getParameter("id");
 
+			logger.info("Delete: "+ req.getParameterNames().toString());
 			logger.info("Delete '"+ id +"'");
 
 			try {

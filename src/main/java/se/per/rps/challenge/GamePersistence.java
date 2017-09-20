@@ -8,10 +8,10 @@ import com.googlecode.objectify.ObjectifyService;
 public class GamePersistence {
 	public List<Game> listGames(int limit) {
 		List<Game> games = ObjectifyService.ofy()
-				.load()
-				.type(Game.class)
-				.limit(limit)
-				.list();
+			.load()
+			.type(Game.class)
+			.limit(limit)
+			.list();
 
 		return games;
 	}
