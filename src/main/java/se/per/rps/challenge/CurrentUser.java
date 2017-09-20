@@ -10,4 +10,8 @@ public class CurrentUser {
 		this.user = user;
 		this.isAdmin = isAdmin;
 	}
+
+	public boolean isPlayer(Player player) {
+		return player.mail.equalsIgnoreCase(getEmail());
+	}
 }

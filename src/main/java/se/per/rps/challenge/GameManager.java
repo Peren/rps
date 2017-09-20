@@ -14,22 +14,16 @@ public class GameManager {
 			return game;
 		}
 
-		String email = user.user.getEmail();
-		if (!email.equals(game.attacker)) {
+		if (!user.isPlayer(game.attacker)) {
 			game.attacker.action = null;
 		}
-		if (!email.equals(game.defender)) {
+		if (!user.isPlayer(game.defender)) {
 			game.defender.action = null;
 		}
 
 		return game;
 	}
 
-	private static boolean isPlayer(Player p, String mail) {
-		if (p == null) return false;
-		if (p.mail == null) return false;
-		return p.mail.equals(mail);
-	}
 
 	public List<Game> listGames(int limit, CurrentUser user) {
 		List<Game> games = null;
@@ -39,10 +33,9 @@ public class GameManager {
 			games = new ArrayList<Game>();
 
 			List<Game> temp = gp.listGames(limit);
-			String mail = user.user.getEmail();
 			for (Game game : temp) {
-				if (isPlayer(game.attacker, mail) ||
-					isPlayer(game.defender, mail)) {
+				if (user.isPlayer(game.attacker) ||
+					user.isPlayer(game.defender)) {
 					games.add(filterGame(game, user));
 				}
 			}
@@ -59,14 +52,15 @@ public class GameManager {
 		}
 
 		if (user.isAdmin) {
-		} else if (isPlayer(game.attacker, user.user.getEmail()) ||
-			isPlayer(game.defender, user.user.getEmail())) {
-			game = filterGame(game, user);
+			return game;
+		}
+
+		if (user.isPlayer(game.attacker) ||
+			user.isPlayer(game.defender)) {
+			return filterGame(game, user);
 		} else {
 			throw new GameException();
 		}
-
-		return game;
 	}
 
 	public void delGame(Long id, CurrentUser user) throws GameException {
@@ -98,16 +92,19 @@ public class GameManager {
 	public void doAction(Long id, GameAction action, CurrentUser user) throws GameException {
 		Game game = gp.getGame(id);
 
-		String email = user.user.getEmail();
-		if (!email.equals(game.attacker.mail) &&
-			!email.equals(game.defender.mail)) {
+		if (game == null) {
 			throw new GameException();
 		}
 
-		if (email.equals(game.attacker.mail)) {
+		if (!user.isPlayer(game.attacker) &&
+			!user.isPlayer(game.defender)) {
+			throw new GameException();
+		}
+
+		if (user.isPlayer(game.attacker)) {
 			game.attacker.action = action;
 		}
-		if (email.equals(game.defender.mail)) {
+		if (user.isPlayer(game.defender)) {
 			game.defender.action = action;
 		}
 
