@@ -75,7 +75,7 @@ public class GameManager {
 	public Game createGame(String challenge, String defender, CurrentUser user) {
 		// TODO: make a check that defender is a valid mail address
 
-		Game game = new Game(user.user.getEmail(), defender);
+		Game game = new Game(user.getEmail(), defender);
 		game.challenge = challenge;
 
 		logger.info(game.toString());

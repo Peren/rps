@@ -3,7 +3,7 @@ package se.per.rps.challenge;
 import com.google.appengine.api.users.User;
 
 public class CurrentUser {
-	public final User user;
+	private final User user;
 	public final boolean isAdmin;
 
 	public CurrentUser(User user, boolean isAdmin) {
@@ -13,5 +13,9 @@ public class CurrentUser {
 
 	public boolean isPlayer(Player player) {
 		return player.mail.equalsIgnoreCase(getEmail());
+	}
+
+	public String getEmail() {
+		return user.getEmail();
 	}
 }
