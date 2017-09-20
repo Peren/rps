@@ -15,6 +15,10 @@ public class Player {
 		this.action = null;
 	}
 
+	public boolean isUser(CurrentUser user) {
+		return mail.equalsIgnoreCase(user.getEmail());
+	}
+
 	@Override
 	public String toString() {
 		return "[Player "+ mail +" "+ action +" "+ points +"]";
