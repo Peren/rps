@@ -22,8 +22,10 @@ public class UserServlet extends HttpServlet {
 
 			StringBuilder sb = new StringBuilder();
 			sb.append("{");
-			sb.append("\"name\":\""+ user.getNickname() +"\",");
-			sb.append("\"mail\":\""+ user.getEmail() +"\"");
+			sb.append("\"user\":{");
+				sb.append("\"name\":\""+ user.getNickname() +"\",");
+				sb.append("\"mail\":\""+ user.getEmail() +"\"");
+				sb.append("}");
 			sb.append("}");
 
 			resp.setContentType("application/json");

@@ -100,8 +100,9 @@ $(document).ready(function() {
 	})
 	.done(function(json, status) {
 //		console.log(json);
+		console.log(json);
 
-		$("#user").html(json.mail);
+		$("#user").html(json.user.mail);
 	})
 	.fail(function(x, status, error) {
 //		console.log(status);
