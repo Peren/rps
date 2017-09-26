@@ -128,10 +128,14 @@ public class GameManager {
 			game.defender.action = null;
 		}
 
-		// TODO: check for victory condition and declare a winner after x rounds
+		if (isWinner(game.attacker.points, game.defender.points)) {
+			game.winner = game.attacker.mail;
+		}
+		if (isWinner(game.defender.points, game.attacker.points)) {
+			game.winner = game.defender.mail;
+		}
 
 		logger.info(game.toString());
-
 		gp.setGame(game);
 	}
 
@@ -139,5 +143,10 @@ public class GameManager {
 		return a == GameAction.Rock && b == GameAction.Scissors ||
 			a == GameAction.Paper && b == GameAction.Rock ||
 			a == GameAction.Scissors && b == GameAction.Paper;
+	}
+
+	private static boolean isWinner(Integer a, Integer b) {
+		if (a > b && a >= 3) return true;
+		return false;
 	}
 }
