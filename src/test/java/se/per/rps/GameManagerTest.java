@@ -17,6 +17,7 @@ import se.per.rps.challenge.GameAction;
 import se.per.rps.challenge.GameException;
 import se.per.rps.challenge.GameManager;
 import se.per.rps.challenge.GamePersistence;
+import se.per.rps.challenge.MissingGameException;
 
 public class GameManagerTest {
 	private final LocalServiceTestHelper helper = new LocalServiceTestHelper(new LocalDatastoreServiceTestConfig());
@@ -48,7 +49,7 @@ public class GameManagerTest {
 	}
 
 	@Test
-	public void testDoAction() throws GameException {
+	public void testDoAction() throws MissingGameException, GameException {
 		MockGamePersistence gp = new MockGamePersistence(new Game("me@mail.com", "you@mail.com"));
 		GameManager gm = new GameManager();
 		gm.gp = gp;

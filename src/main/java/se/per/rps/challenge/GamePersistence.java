@@ -16,7 +16,7 @@ public class GamePersistence {
 		return games;
 	}
 
-	public Game getGame(Long id) throws GameException {
+	public Game getGame(Long id) throws MissingGameException {
 		Game game = ObjectifyService.ofy()
 			.load()
 			.type(Game.class)
@@ -24,7 +24,7 @@ public class GamePersistence {
 			.now();
 
 		if (game == null) {
-			throw new GameException();
+			throw new MissingGameException();
 		}
 
 		return game;
@@ -37,7 +37,7 @@ public class GamePersistence {
 			.now();
 	}
 
-	public void delGame(Long id) throws GameException {
+	public void delGame(Long id) throws MissingGameException {
 		ObjectifyService.ofy()
 			.delete()
 			.type(Game.class)

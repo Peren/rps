@@ -6,8 +6,8 @@ import java.util.List;
 import com.googlecode.objectify.Key;
 
 import se.per.rps.challenge.Game;
-import se.per.rps.challenge.GameException;
 import se.per.rps.challenge.GamePersistence;
+import se.per.rps.challenge.MissingGameException;
 
 public class MockGamePersistence extends GamePersistence {
 	public Game game = null;
@@ -24,8 +24,8 @@ public class MockGamePersistence extends GamePersistence {
 	}
 
 	@Override
-	public Game getGame(Long id) throws GameException {
-		if (game == null) throw new GameException();
+	public Game getGame(Long id) throws MissingGameException {
+		if (game == null) throw new MissingGameException();
 		return game;
 	}
 
@@ -36,7 +36,7 @@ public class MockGamePersistence extends GamePersistence {
 	}
 
 	@Override
-	public void delGame(Long id) throws GameException {
-		if (id != game.id) throw new GameException();
+	public void delGame(Long id) throws MissingGameException {
+		if (id != game.id) throw new MissingGameException();
 	}
 }

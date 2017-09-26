@@ -45,12 +45,8 @@ public class GameManager {
 		return games;
 	}
 
-	public Game getGame(Long id, CurrentUser user) throws GameException {
+	public Game getGame(Long id, CurrentUser user) throws MissingGameException, GameException {
 		Game game = gp.getGame(id);
-
-		if (game == null) {
-			throw new GameException();
-		}
 
 		if (user.isAdmin) {
 			return game;
@@ -64,7 +60,7 @@ public class GameManager {
 		}
 	}
 
-	public void delGame(Long id, CurrentUser user) throws GameException {
+	public void delGame(Long id, CurrentUser user) throws MissingGameException, GameException {
 		if (user.isAdmin) {
 		} else {
 			throw new GameException();
@@ -92,15 +88,14 @@ public class GameManager {
 		game.id = id;
 		logger.info(game +" "+ id);
 
-		// TODO: return id instead of game
 		return game;
 	}
 
-	public void doAction(Long id, GameAction action, CurrentUser user) throws GameException {
+	public void doAction(Long id, GameAction action, CurrentUser user) throws MissingGameException, GameException {
 		Game game = gp.getGame(id);
 
 		if (game == null) {
-			throw new GameException();
+			throw new MissingGameException();
 		}
 
 		if (!user.isPlayer(game.attacker) &&

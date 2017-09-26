@@ -54,6 +54,8 @@ public class GameServlet extends HttpServlet {
 					sb.append("\"game\":"+ game.toJson());
 				} catch (NumberFormatException e) {
 					throw new GameServletException(HttpServletResponse.SC_BAD_REQUEST);
+				} catch (MissingGameException e) {
+					throw new GameServletException(HttpServletResponse.SC_NOT_FOUND);
 				} catch (GameException e) {
 					throw new GameServletException(HttpServletResponse.SC_FORBIDDEN);
 				}
@@ -120,6 +122,8 @@ public class GameServlet extends HttpServlet {
 				gm.doAction(Long.parseLong(id), ga, user);
 			} catch(NumberFormatException e) {
 				throw new GameServletException(HttpServletResponse.SC_BAD_REQUEST);
+			} catch (MissingGameException e) {
+				throw new GameServletException(HttpServletResponse.SC_NOT_FOUND);
 			} catch (GameException e) {
 				throw new GameServletException(HttpServletResponse.SC_FORBIDDEN);
 			}
@@ -144,6 +148,8 @@ public class GameServlet extends HttpServlet {
 				gm.delGame(Long.parseLong(id), user);
 			} catch (NumberFormatException e) {
 				throw new GameServletException(HttpServletResponse.SC_BAD_REQUEST);
+			} catch (MissingGameException e) {
+				throw new GameServletException(HttpServletResponse.SC_NOT_FOUND);
 			} catch (GameException e) {
 				throw new GameServletException(HttpServletResponse.SC_FORBIDDEN);
 			}
